@@ -9,6 +9,7 @@ import com.reihanalavi.mvpschoolstudent.presenters.MainPresenter
 import com.reihanalavi.mvpschoolstudent.views.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.onRefresh
 
 class MainActivity : AppCompatActivity(), MainView, AnkoLogger {
 
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity(), MainView, AnkoLogger {
 
         }
 
+        swipeRefresh.onRefresh {
+            presenter.getPopulars()
+        }
+
         recyclerView_main.layoutManager = LinearLayoutManager(this)
         recyclerView_main.adapter = adapter
 
@@ -41,9 +46,11 @@ class MainActivity : AppCompatActivity(), MainView, AnkoLogger {
 
     override fun hideLoading() {
         toast("Selesai")
+        swipeRefresh.isRefreshing = false
     }
 
     override fun showData(data: ArrayList<Popular>) {
+        swipeRefresh.isRefreshing = false
         adapter.popular = data
         adapter.notifyDataSetChanged()
     }
